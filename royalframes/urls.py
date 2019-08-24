@@ -36,7 +36,8 @@ schema_view = get_schema_view(
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('api/v1/', include('royalframes.apps.authentication.urls')),
+    path('photography/royalframes/',
+         include('royalframes.apps.authentication.urls')),
     # path('api/v1/', include('royalframes.apps.upload.urls')),
     # path('api/v1/', include('royalframes.apps.blog.urls')),
 ]
