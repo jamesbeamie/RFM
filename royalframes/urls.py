@@ -38,6 +38,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('photography/royalframes/',
          include('royalframes.apps.authentication.urls')),
-    # path('api/v1/', include('royalframes.apps.upload.urls')),
     path('photography/royalframes/', include('royalframes.apps.blog.urls')),
 ]

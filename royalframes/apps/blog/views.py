@@ -112,7 +112,7 @@ class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
             })
         article.delete()
         return Response({
-            "article": 'article_delete'
+            "article": 'deleted'
         }, status=204)
 
     def put(self, request, slug, *args, **kwargs):
@@ -124,24 +124,24 @@ class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
         article_data = request.data
         article.updated_at = dt.datetime.utcnow()
         serializer = ArticleSerializer(
-               instance=article,
-               data=article_data,
-               context={'request': request},
-               partial=True
-               )
+            instance=article,
+            data=article_data,
+            context={'request': request},
+            partial=True
+        )
         if serializer.is_valid():
-                serializer.save()
-                return Response(
-                    [
-                        serializer.data,
-                        {"message": 'article_update'}
-                    ], status=201
-                )
+            serializer.save()
+            return Response(
+                [
+                    serializer.data,
+                    {"message": 'article_update'}
+                ], status=201
+            )
         else:
             return Response(
-                    serializer.errors,
-                    status=400
-                )
+                serializer.errors,
+                status=400
+            )
 
 
 def get_article(slug):
@@ -154,4 +154,3 @@ def get_article(slug):
             "message": 'not_found'
         }, status.HTTP_404_NOT_FOUND)
     return article
-
