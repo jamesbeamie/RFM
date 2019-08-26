@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'cloudinary',
 
     'royalframes.apps.authentication',
-    # 'royalframes.apps.blogs',
+    'royalframes.apps.blog',
     # 'royalframes.apps.upload',
     # credits --> https://github.com/axnsan12/drf-yasg
     'drf_yasg',
