@@ -40,4 +40,5 @@ urlpatterns = [
          include('royalframes.apps.authentication.urls')),
     path('photography/royalframes/', include('royalframes.apps.blog.urls')),
     path('photography/royalframes/', include('royalframes.apps.bumps.urls')),
+    path('photography/royalframes/', include('royalframes.apps.engagements.urls')),
 ]
