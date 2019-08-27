@@ -47,7 +47,8 @@ class GetAuthentication(TokenAuthentication):
       To decode a token
 
     """
-    def decode_jwt_token(token):
+
+    def decode_jwt_token(self, token):
         try:
             user_info = jwt.decode(token, secret_key)
         except jwt.ExpiredSignatureError:

@@ -39,21 +39,26 @@ class BumpAPIView(generics.ListCreateAPIView):
         """
             POST /api/v1/bumps/
         """
-        permission_classes = (IsAuthenticated,)
-        context = {"request": request}
-        bump = request.data.copy()
-        bump['slug'] = BumpSerializer(
-        ).create_slug(request.data['title'])
-        serializer = self.serializer_class(data=bump, context=context)
-        if serializer.is_valid():
-            serializer.save()
+        permission_classes = (IsAuthenticatedOrReadOnly,)
+        if permission_classes:
+            context = {"request": request}
+            bump = request.data.copy()
+            bump['slug'] = BumpSerializer(
+            ).create_slug(request.data['title'])
+            serializer = self.serializer_class(data=bump, context=context)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    serializer.data,
+                    status=status.HTTP_201_CREATED
+                )
             return Response(
-                serializer.data,
-                status=status.HTTP_201_CREATED
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
             )
         return Response(
             serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_401_UNAUTHORIZED
         )
 
     def get(self, request):
