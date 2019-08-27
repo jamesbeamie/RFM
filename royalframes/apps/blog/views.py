@@ -23,28 +23,28 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.views import Response
 
-from .models import Article, User
-from .renderers import ArticleJSONRenderer
-from .serializers import ArticleSerializer
+from .models import Blog, User
+from .renderers import BlogJSONRenderer
+from .serializers import BlogSerializer
 
 
-class ArticleAPIView(generics.ListCreateAPIView):
+class BlogAPIView(generics.ListCreateAPIView):
     """
         Article endpoints
     """
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
 
     def post(self, request):
         """
-            POST /api/v1/articles/
+            POST /api/v1/Blogs/
         """
         permission_classes = (IsAuthenticated,)
         context = {"request": request}
-        article = request.data.copy()
-        article['slug'] = ArticleSerializer(
+        blog = request.data.copy()
+        blog['slug'] = BlogSerializer(
         ).create_slug(request.data['title'])
-        serializer = self.serializer_class(data=article, context=context)
+        serializer = self.serializer_class(data=blog, context=context)
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -58,12 +58,12 @@ class ArticleAPIView(generics.ListCreateAPIView):
 
     def get(self, request):
         """
-            GET /api/v1/articles/
+            GET /api/v1/blogs/
         """
         perform_pagination = PaginateContent()
         objs_per_page = perform_pagination.paginate_queryset(
             self.queryset, request)
-        serializer = ArticleSerializer(
+        serializer = BlogSerializer(
             objs_per_page,
             context={
                 'request': request
@@ -73,26 +73,26 @@ class ArticleAPIView(generics.ListCreateAPIView):
         return perform_pagination.get_paginated_response(serializer.data)
 
 
-class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
+class SpecificBlog(generics.RetrieveUpdateDestroyAPIView):
     """
-        Specific article endpoint class
+        Specific blog endpoint class
     """
-    serializer_class = ArticleSerializer
+    serializer_class = BlogSerializer
 
     def get(self, request, slug, *args, **kwargs):
         """
-            GET /api/v1/articles/<slug>/
+            GET /api/v1/blogs/<slug>/
         """
         try:
-            article = Article.objects.get(slug=slug)
-        except Article.DoesNotExist:
+            blog = Blog.objects.get(slug=slug)
+        except Blog.DoesNotExist:
             raise exceptions.NotFound({
                 "message": 'not_found'
             })
         # this checks if an istance of read exists
         # if it doesn't then it creates a new one
-        serializer = ArticleSerializer(
-            article,
+        serializer = BlogSerializer(
+            blog,
             context={
                 'request': request
             }
@@ -101,31 +101,31 @@ class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, slug, *args, **kwargs):
         """
-            DELETE /api/v1/articles/<slug>/
+            DELETE /api/v1/blogs/<slug>/
         """
         permission_classes = (IsAuthenticated,)
         try:
-            article = Article.objects.get(slug=slug)
-        except Article.DoesNotExist:
+            blog = Blog.objects.get(slug=slug)
+        except Blog.DoesNotExist:
             raise exceptions.NotFound({
                 "message": 'not_found'
             })
-        article.delete()
+        blog.delete()
         return Response({
-            "article": 'deleted'
+            "blog": 'deleted'
         }, status=204)
 
     def put(self, request, slug, *args, **kwargs):
         """
-            PUT /api/v1/articles/<slug>/
+            PUT /api/v1/blogs/<slug>/
         """
         permission_classes = (IsAuthenticated,)
-        article = get_object_or_404(Article.objects.all(), slug=slug)
-        article_data = request.data
-        article.updated_at = dt.datetime.utcnow()
-        serializer = ArticleSerializer(
-            instance=article,
-            data=article_data,
+        blog = get_object_or_404(Blog.objects.all(), slug=slug)
+        blog_data = request.data
+        blog.updated_at = dt.datetime.utcnow()
+        serializer = BlogSerializer(
+            instance=blog,
+            data=blog_data,
             context={'request': request},
             partial=True
         )
@@ -134,7 +134,7 @@ class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
             return Response(
                 [
                     serializer.data,
-                    {"message": 'article_update'}
+                    {"message": 'blog_update'}
                 ], status=201
             )
         else:
@@ -144,13 +144,13 @@ class SpecificArticle(generics.RetrieveUpdateDestroyAPIView):
             )
 
 
-def get_article(slug):
+def get_blog(slug):
     """
-        Returns specific article using slug
+        Returns specific blog using slug
     """
-    article = Article.objects.all().filter(slug=slug).first()
-    if article is None:
+    blog = Blog.objects.all().filter(slug=slug).first()
+    if blog is None:
         raise exceptions.NotFound({
             "message": 'not_found'
         }, status.HTTP_404_NOT_FOUND)
-    return article
+    return blog

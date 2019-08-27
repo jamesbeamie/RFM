@@ -11,7 +11,7 @@ from cloudinary.models import CloudinaryField
 
 class Bump(models.Model):
     """
-        Each Article model schema
+        Each Blog model schema
     """
     image_path = models.CharField(max_length=255, blank=True, null=True)
     slug = models.SlugField(max_length=255)

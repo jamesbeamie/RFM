@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import (ArticleAPIView, SpecificArticle)
+from .views import (BlogAPIView, SpecificBlog)
 
 app_name = "blog"
 
 urlpatterns = [
-    path('blog/', ArticleAPIView.as_view(), name="blog"),
-    path('blog/<str:slug>/', SpecificArticle.as_view(),
+    path('blog/', BlogAPIView.as_view(), name="blog"),
+    path('blog/<str:slug>/', SpecificBlog.as_view(),
          name="specific/blog"),
 ]
