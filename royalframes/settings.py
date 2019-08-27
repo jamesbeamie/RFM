@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'royalframes.apps.blog',
     'royalframes.apps.bumps',
     'royalframes.apps.engagements',
+    'royalframes.apps.family',
     # credits --> https://github.com/axnsan12/drf-yasg
     'drf_yasg',
     'social_django',
