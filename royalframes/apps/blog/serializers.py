@@ -9,21 +9,21 @@ from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 
 from royalframes.apps.authentication.serializers import RegistrationSerializer
-from .models import Article
+from .models import Blog
 from ..authentication.serializers import RegistrationSerializer
 from django.db.models import Avg
 
 
-class ArticleSerializer(serializers.ModelSerializer):
+class BlogSerializer(serializers.ModelSerializer):
     """
-        Article model serializers
+        Blog model serializers
     """
     image_path = serializers.CharField(required=False, default=None)
     title = serializers.CharField(required=True)
     body = serializers.CharField(required=True)
 
     class Meta:
-        model = Article
+        model = Blog
         fields = "__all__"
 
     def create_slug(self, title):
@@ -33,7 +33,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         a_slug = slugify(title)
         origin = 1
         unique_slug = a_slug
-        while Article.objects.filter(slug=unique_slug).exists():
+        while Blog.objects.filter(slug=unique_slug).exists():
             unique_slug = '{}-{}'.format(a_slug, origin)
             origin += 1
         slug = unique_slug
